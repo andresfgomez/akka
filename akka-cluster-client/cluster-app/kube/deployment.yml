@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: akka-cluster-client-demo-backend  
+spec:
+  replicas: 2
+  template:
+    metadata:
+      name: akka-cluster-client-demo-backend
+      labels:
+        name: akka-cluster-client-demo-backend
+        app: akka-cluster-client-demo-backend
+    spec:
+      containers:
+      - name: akka-cluster-client-demo-backend
+        image: akka-cluster-client-demo-backend:v1
+        imagePullPolicy: Never
+        env:        
+        - name: JAVA_OPTS
+          value: -Dredis.host=172.17.0.3 -Dredis.port=6379        
+        ports:
+        # akka remoting
+        - name: akka
+          containerPort: 2551
+          protocol: TCP    

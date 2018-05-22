@@ -1,0 +1,57 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+repositories {
+    mavenCentral() 
+}
+
+buildscript {
+  
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+    
+    jcenter()
+  }
+  
+  dependencies {
+    classpath "net.ltgt.gradle:gradle-apt-plugin:0.7"
+    classpath "com.github.jengelman.gradle.plugins:shadow:1.2.4"
+    classpath 'de.sebastianboegl.gradle.plugins:shadow-log4j-transformer:1.0.1'
+  }
+}
+
+dependencies {
+	compile 'com.typesafe.akka:akka-actor_2.11:2.5.12'
+    compile 'com.typesafe.akka:akka-remote_2.11:2.5.12'
+    compile 'com.typesafe.akka:akka-cluster-tools_2.11:2.5.12'
+    compile 'com.lightbend.akka.management:akka-management_2.11:0.13.1'
+    compile 'com.lightbend.akka.management:akka-management-cluster-bootstrap_2.11:0.13.1'    
+    compile 'com.lightbend.akka.discovery:akka-discovery-dns_2.11:0.13.1'
+    compile 'redis.clients:jedis:2.9.0'
+    compile 'org.springframework:spring-context:5.0.6.RELEASE'
+    
+}
+
+jar {    
+    manifest {
+        def dateTime = new Date() 
+        attributes(
+            "Main-Class":"co.afgm.akka.backend.Application",                        
+            "Creation-Date": dateTime.toTimestamp().toString()            
+        )
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+shadowJar {
+    baseName = 'akka-cluster-client-demo-backend'
+    classifier = null
+
+    transform(com.github.jengelman.gradle.plugins.shadow.transformers.AppendingTransformer) {
+        resource = 'reference.conf'
+    }
+    transform(de.sebastianboegl.gradle.plugins.shadow.transformers.Log4j2PluginsFileTransformer)
+}

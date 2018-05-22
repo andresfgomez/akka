@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: akka-cluster-client-demo-frontend  
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: akka-cluster-client-demo-frontend
+      labels:
+        name: akka-cluster-client-demo-frontend
+        app: akka-cluster-client-demo-frontend
+    spec:
+      containers:
+      - name: akka-cluster-client-demo-frontend
+        image: akka-cluster-client-demo-frontend:v1
+        imagePullPolicy: Never
+        env:        
+        - name: JAVA_OPTS
+          value: -Dredis.host=172.17.0.3 -Dredis.port=6379        
+        ports:        
+        - name: http
+          containerPort: 8080
+          protocol: TCP    

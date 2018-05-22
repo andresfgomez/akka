@@ -1,0 +1,30 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: akka-cluster-client-remote-backend
+spec:
+  # by setting the clusterIp to None we are a "headless service"
+  # and thus the svc ("service") DNS record for the single IP but the IPs of all nodes that we select
+  #
+  # In other words:
+  #  $ kubectl exec -it $POD -- nslookup demo-akka-cluster-bootstrap.default.svc.cluster.local
+  #  Server:        10.0.0.10
+  #
+  #  Name:  appka-service.default.svc.cluster.local
+  #  Address: 172.17.0.7
+  #  Name:  appka-service.default.svc.cluster.local
+  #  Address: 172.17.0.8
+  #  Name:  appka-service.default.svc.cluster.local
+  #  Address: 172.17.0.9
+  #  Name:  appka-service.default.svc.cluster.local
+  #  Address: 172.17.0.6
+  clusterIP: None
+  selector:
+    app: akka-cluster-client-demo-backend
+  ports:
+  - name: akka
+    protocol: TCP
+    port: 2551
+    targetPort: 2551
+
+  

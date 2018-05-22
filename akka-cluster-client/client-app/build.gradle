@@ -1,0 +1,30 @@
+apply plugin: "java"
+apply plugin: "eclipse"
+apply plugin: 'org.springframework.boot'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.2.RELEASE")
+    }
+}
+
+repositories {
+    mavenCentral() 
+}
+
+dependencies {
+	compile 'com.typesafe.akka:akka-actor_2.11:2.5.12'
+    compile 'com.typesafe.akka:akka-remote_2.11:2.5.12'
+    compile 'com.typesafe.akka:akka-cluster-tools_2.11:2.5.12'
+   	compile("org.springframework.boot:spring-boot-starter-web:2.0.2.RELEASE")  
+   	compile 'redis.clients:jedis:2.9.0'  
+}
+
+bootJar {
+	mainClassName = 'co.afgm.akka.api.Application'
+	archiveName = 'akka-cluster-client-demo-frontend.jar'
+}
